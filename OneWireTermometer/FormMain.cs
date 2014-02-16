@@ -24,12 +24,19 @@ namespace OneWireTermometer
             catch
             {
             }
+            m_Sensor1 = new OneWire.SensorDS18B20(oneWire1)
+            {
+                // TODO: Select device address
+                Address = new OneWire.OneWire.Address(new byte[8] { 0x28, 0xDE, 0xD3, 0xB9, 0x04, 0x00, 0x00, 0x45 }),
+            };
             if (oneWire1.IsOpen)
             {
                 UpdateT();
                 timerUpdateT.Start();
             }
         }
+
+        private OneWire.SensorDS18B20 m_Sensor1;
 
         private delegate void SetTemperatureCallback(float value);
 
@@ -59,38 +66,17 @@ namespace OneWireTermometer
 
         protected void UpdateT()
         {
-            float temp = float.NaN;
             try
             {
-                bool ok = true;
-                // DS18B20 command: Skip ROM, Convert T
-                if (ok)
-                    ok = oneWire1.ResetLine();
-                if (ok)
-                    ok = 0xCC == oneWire1.WriteByte(0xCC);
-                if (ok)
-                    ok = 0x44 == oneWire1.WriteByte(0x44);
-                // Wait for convert t command execute
-                if (ok)
-                    System.Threading.Thread.Sleep(1000);
-                // DS18B20 command: Skip ROM, Read T
-                if (ok)
-                    ok = oneWire1.ResetLine();
-                if (ok)
-                    ok = 0xCC == oneWire1.WriteByte(0xCC);
-                if (ok)
-                    ok = 0xBE == oneWire1.WriteByte(0xBE);
-                if (ok)
-                {
-                    int tL = oneWire1.ReadByte();
-                    int tH = oneWire1.ReadByte();
-                    temp = (Int16)((byte)(tH << 8) | (byte)tL) / 16f;
-                }
+                if (m_Sensor1.UpdateValue())
+                    SetTemperature(m_Sensor1.Value);
+                else
+                    SetTemperature(float.NaN);
             }
             catch
             {
+                SetTemperature(float.NaN);
             }
-            SetTemperature(temp);
         }
     }
 }
