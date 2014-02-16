@@ -13,8 +13,10 @@ namespace OneWireTermometer
         public FormMain()
         {
             InitializeComponent();
-            // TODO: Select port name
-            oneWire1.PortName = "COM1";
+            // TODO: Select port name. Now Select last finded port
+            var p = OneWire.OneWire.GetPortNames();
+            if (p.Length > 0)
+                oneWire1.PortName = p[p.Length - 1];
             try
             {
                 oneWire1.Open();

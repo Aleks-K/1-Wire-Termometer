@@ -42,7 +42,7 @@
             this.labelTemperature.Font = new System.Drawing.Font("Verdana", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTemperature.Location = new System.Drawing.Point(12, 9);
             this.labelTemperature.Name = "labelTemperature";
-            this.labelTemperature.Size = new System.Drawing.Size(594, 406);
+            this.labelTemperature.Size = new System.Drawing.Size(874, 406);
             this.labelTemperature.TabIndex = 0;
             this.labelTemperature.Text = "UNKNOWN";
             this.labelTemperature.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -56,14 +56,13 @@
             // 
             this.oneWire1.PortName = "COM1";
             // 
-            // Form1
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(618, 424);
+            this.ClientSize = new System.Drawing.Size(898, 424);
             this.Controls.Add(this.labelTemperature);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "Form1";
+            this.Name = "FormMain";
             this.Text = "1-Wire termometer";
             this.ResumeLayout(false);
 
