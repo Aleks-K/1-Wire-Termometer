@@ -274,6 +274,21 @@ namespace OneWire
 
             private byte[] m_Address;
 
+            public static Address Broadcast = new Address(new byte[8] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF });
+
+            public int Length { get { return m_Address.Length; } }
+
+            public bool IsBroadcast
+            {
+                get
+                {
+                    for (int i = 0; i < m_Address.Length; i++)
+                        if (m_Address[i] != 0xFF)
+                            return false;
+                    return true;
+                }
+            }
+
             public byte this[int index]
             {
                 get
