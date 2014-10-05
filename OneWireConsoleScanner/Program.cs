@@ -28,13 +28,25 @@ namespace OneWireConsoleScanner
                         if (args.Length > 0)
                         {
                             // when read concrete devices
-                            var sensor = new OneWire.SensorDS18B20(oneWire)
+                            for (int i = 0; i < args.Length; i++)
                             {
-                                Address = OneWire.OneWire.Address.Parse(args[0])
-                            };
-                            if (sensor.UpdateValue())
-                            {
-                                Console.WriteLine("Sensor's {0} value is {1} C", sensor.Address, sensor.Value);
+                                try
+                                {
+                                    var sensor = new OneWire.SensorDS18B20(oneWire)
+                                    {
+                                        Address = OneWire.OneWire.Address.Parse(args[i])
+                                    };
+                                    if (sensor.UpdateValue())
+                                    {
+                                        Console.WriteLine("Sensor's {0} value is {1} C", sensor.Address, sensor.Value);
+                                    }
+                                }
+                                catch (ArgumentException ex)
+                                {
+                                    Console.WriteLine("Sensor address {0} is not valid", args[i]);  
+                                }
+                                catch
+                                {}
                             }
                         }
                         else
