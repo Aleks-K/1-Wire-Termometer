@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace OneWire
@@ -337,6 +338,19 @@ namespace OneWire
                     sb.AppendFormat(":{0:X2}", m_Address[i]);
                 sb.Append("}");
                 return sb.ToString();
+            }
+
+            public static Address Parse(string s)
+            {
+                var bytes = s.Split(':');
+                var address = new Address();
+                if (bytes.Length != address.m_Address.Length)
+                    throw new ArgumentException();
+                for (int i = 0; i < address.m_Address.Length; i++)
+                {
+                    address[i] = byte.Parse(bytes[i], NumberStyles.HexNumber);
+                }
+                return address;
             }
         }
     }
