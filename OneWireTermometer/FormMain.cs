@@ -24,59 +24,57 @@ namespace OneWireTermometer
             catch
             {
             }
-            m_Sensor1 = new OneWire.SensorDS18B20(oneWire1)
-            {
-                // TODO: Select device address
-                Address = new OneWire.OneWire.Address(new byte[8] { 0x28, 0xDE, 0xD3, 0xB9, 0x04, 0x00, 0x00, 0x45 }),
-            };
-            if (oneWire1.IsOpen)
-            {
-                UpdateT();
-                timerUpdateT.Start();
-            }
+            backgroundWorker1.RunWorkerAsync(oneWire1);
         }
 
-        private OneWire.SensorDS18B20 m_Sensor1;
+        private delegate void SetTextCallback(string value);
 
-        private delegate void SetTemperatureCallback(float value);
-
-        private void SetTemperature(float value)
+        private void SetText(string value)
         {
             try
             {
                 if (InvokeRequired)
                 {
-                    Invoke(new SetTemperatureCallback(SetTemperature), value);
+                    Invoke(new SetTextCallback(SetText), value);
                     return;
+                }
+                labelTemperature.Text = value;
+            }
+            catch
+            {
+            }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                var port = e.Argument as OneWire.OneWire;
+                var sensor = new OneWire.SensorDS18B20(port)
+                {
+                    // TODO: Select device address
+                    Address = OneWire.OneWire.Address.Broadcast,
+                };
+                SetText(port.PortName);
+                if (port.IsOpen)
+                {
+                    sensor.MeasureT();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (port.IsOpen)
+                {
+                    if (sensor.ReadT())
+                        SetText(string.Format("{0:F3}°C", sensor.Value));
+                    else
+                        SetText("UNKN.");
+                    sensor.MeasureT();
+                    System.Threading.Thread.Sleep(1000);
                 }
             }
             catch
             {
             }
-            if (float.IsNaN(value))
-                labelTemperature.Text = "UNKNOWN";
-            else
-                labelTemperature.Text = string.Format("{0}°C", value);
-        }
-
-        private void timerUpdateT_Tick(object sender, EventArgs e)
-        {
-            UpdateT();
-        }
-
-        protected void UpdateT()
-        {
-            try
-            {
-                if (m_Sensor1.UpdateValue())
-                    SetTemperature(m_Sensor1.Value);
-                else
-                    SetTemperature(float.NaN);
-            }
-            catch
-            {
-                SetTemperature(float.NaN);
-            }
+            SetText("CLOSED");
         }
     }
 }
