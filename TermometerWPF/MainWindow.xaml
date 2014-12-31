@@ -1,0 +1,19 @@
+﻿<Window x:Class="Termometer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Termometer" Height="350" Width="525" KeyUp="Window_KeyUp">
+    <Grid>
+        <ProgressBar Name="TermometerProgressbar" Orientation="Vertical" Width="10" HorizontalAlignment="Left" Margin="10,10,0,10" Minimum="-50" Maximum="50" Background="White">
+            <ProgressBar.Foreground>
+                <LinearGradientBrush EndPoint="0,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="#00000000" Offset="0"/>
+                    <GradientStop Color="Red" Offset="1"/>
+                </LinearGradientBrush>
+            </ProgressBar.Foreground>
+        </ProgressBar>
+        <ComboBox Name="PortsCombobox" HorizontalAlignment="Left" Margin="262,10,0,0" VerticalAlignment="Top" Width="74" SelectionChanged="PortsCombobox_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="228,13,0,0" TextWrapping="Wrap" Text="Port:" VerticalAlignment="Top" Width="34"/>
+        <TextBox Name="output" Margin="227,37,10,10" TextWrapping="Wrap"/>
+        <TextBlock x:Name="TermometerValueTextblock" HorizontalAlignment="Left" Margin="36,10,0,0" TextWrapping="Wrap" Text="T=..." VerticalAlignment="Top" Height="62" Width="186" FontSize="48"/>
+    </Grid>
+</Window>
